@@ -1,6 +1,8 @@
 # Azure AI Foundry Agents via APIM + Application Insights Telemetry
 
-This notebook demonstrates how to call **Azure AI Foundry hosted agents** through **Azure API Management (APIM)** and send token-usage telemetry to **Application Insights** using OpenTelemetry.
+This notebook demonstrates how to call **Microsoft AI Foundry hosted agents** through **Azure API Management (APIM)** and send token-usage telemetry to **Application Insights** using OpenTelemetry.
+
+> **Important:** This notebook does **not** deploy or provision any agents. Your Microsoft AI Foundry agents (e.g. WeatherAgent, HotelAgent, FinanceAgent) must already be created and configured behind Azure API Management **before** running this notebook. Any agent hosted in Microsoft Foundry and exposed through APIM can be integrated — simply add a new `call_agent()` invocation with the agent's name and prompt.
 
 ## Architecture
 
@@ -45,9 +47,9 @@ This notebook demonstrates how to call **Azure AI Foundry hosted agents** throug
 
 - **Azure CLI** authenticated (`az login`)
 - **Python 3.10+** with a virtual environment
-- **Azure resources:**
+- **Azure resources (pre-provisioned):**
   - Azure API Management instance with routes to Foundry-hosted agents
-  - Azure AI Foundry project with deployed agents
+  - Azure AI Foundry project with **one or more agents already deployed and accessible via APIM** (this notebook does not create or deploy agents)
   - Application Insights resource
 - **APIM subscription key** with access to the Foundry agent routes
 - **App Insights connection string**
@@ -119,6 +121,17 @@ traces
 | gpt-4.1 | $0.000002 | $0.000008 |
 | gpt-4o | $0.0000025 | $0.000010 |
 | gpt-4o-mini | $0.00000015 | $0.0000006 |
+
+## Adding Your Own Agents
+
+Any agent hosted in Microsoft Foundry and exposed through APIM can be added to this notebook. To call a new agent, simply invoke `call_agent()` with the agent's route name and a user message:
+
+```python
+response = call_agent("YourAgentName", "Your prompt here")
+print("YourAgentName:", response)
+```
+
+Token usage and cost telemetry will be tracked automatically — no additional configuration is needed.
 
 ## Key Functions
 
